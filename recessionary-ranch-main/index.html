@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/p5.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/addons/p5.sound.min.js"></script>
+
+    <title>Recessionary Ranch</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style></style>
+  </head>
+
+  <body>
+    <header>
+      <h1>The Revamped Recessionary Ranch (feat. The Broke Farmer)</h1>
+      <h2>Erin Choi, Tiffany (Thinzar) Lin, Michelle Tang</h2>
+    </header>
+
+    <main>
+      <div id="documentation">
+        <h2>About the Game</h2>
+        <p>
+          Our updated farming game is inspired by calming, casual games with low-stakes farming and cooking mechanics, such as Stardew Valley, Smurfs' Village, and Cats & Soup. It builds on an earlier prototype of the game (<a href="https://i6.cims.nyu.edu/~eyc321/interactive/midterm/">Midterm Project</a>). The Revamped Recessionary Ranch now includes an expanded overworld for you to explore, ways to spend your money, a VR minigame, visual enhancements, and saving your progress.
+        </p>
+
+        <h2>Game Concept</h2>
+        <p>
+          A recession is about to begin, and your plans to find a new job have been soiled. You're about to lose hope when, suddenly, you stumble upon the perfect plot of land for starting your own farm, complete with a bag of seeds, soil ready for cultivation, a watering can and a lake, and a giant cow. There's even a kitchen where you can cook dishes using the crops you grow and a marketplace! Make as much money as you can and sustain your farm to prepare for the recession by growing and harvesting crops, cooking dishes, and selling them. Unlock achievements along the way based on what you cook and how much you earn!
+        </p>
+
+        <h2>How to Play</h2>
+        <p>
+          Please have your browser window set to at least 1000 pixels wide for the best experience!
+        </p>
+        <p>
+          Use the WASD keys on your keyboard to move. (W = up, A = left, S = down, D = right)
+        </p>
+        <p>
+          The status window to the right of the game screen can be used to track your total profit, what seed you're currently planting, how full your watering can is, and your ingredient inventory (how many of each ingredient you currently have).
+        </p>
+
+        <div id="instructions_cols">
+          <div>
+            <h3>Planting, Growing, Harvesting, Buying</h3>
+            <ul>
+              <li>
+                Press P to toggle the pop-up window that shows you what seeds you can plant and how many seeds you have for each ingredient. Click the image of the ingredient you want to plant.
+              </li>
+              <li>
+                Walk up to a plot of soil and press SPACE to plant a seed. Wait while the plant goes through 4 stages of growth - when it's fully matured and looks as it appears in the inventory or seed window, press SPACE in front of it to harvest it.
+              </li>
+              <li>
+                You can speed up the growth of your crops by watering them. Walk up to the pond and press SPACE to fill your watering can. Walk up to a plant and press SPACE to water it.
+              </li>
+              <li>
+                Plants can be watered as many times as you want until they're fully grown. However, your water is limited - you can only water plants 5 times before the watering can is empty again!
+              </li>
+              <li>
+                If you run out of seeds for any plant, head to the marketplace in the bottom right of the farm. Walk up to the seed stall (left stall) and press SPACE in front of the crate of the ingredient you need more seeds for. Once you buy a seed for $1, your seed bag will display your updated seed total.
+              </li>
+              <li>
+                Running out of soil plots? You can purchase more in the bottom left area of the farm! Each column of 5 plots is $20. Walk up to a picket and press SPACE to purchase the column of plots above it.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Udderly Amoosing Cow Game</h3>
+            <p>You can only obtain milk through this VR minigame!</p>
+            <ul>
+              <li>
+                Walk up to the holy cow surrounded by flower trees inside the fenced pen at the top right of the farm. Press SPACE next to the cow to begin the VR minigame. You'll be transported to a 3D world!
+              </li>
+              <li>
+                Use your mouse to rotate your view, and click on and collect the drops of milk falling from the sky. 5 drops makes 1 bottle of milk! You can see how much milk you've collected on the display board next to the cow.
+              </li>
+              <li>
+                Collect 10 milk bottles' worth of milk drops to end the game automatically and return to the farm. If you want to end the game early, press on the yellow box just below the display board. 
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Cooking and Selling</h3>
+            <ul>
+              <li>
+                Walk up to a stove in the kitchen at the top left of the farm and press SPACE to open the recipe book. Click the image of the recipe you want to cook.
+              </li>
+              <li>
+                If you have enough ingredients, the dish will appear on the table behind the stove being used and slowly grow larger as it is being prepared.
+              </li>
+              <li>
+                When the dish stops growing larger, it's ready to be collected! Walk up to the table with the completed dish and press SPACE to add it to your inventory of dishes to sell. 
+              </li>
+              <li>
+                Walk to the marketplace at the bottom right of the farm and stand by an empty booth in the serving stall (right stall). Press SPACE to open a menu of dishes you can sell and click the image of the dish you want to sell. The dish will sell for its fixed cost (listed in the recipe book), and a happy customer will come to pick up the food!
+              </li>
+              <li>
+                Achievements you can unlock include surpassing $50, $100, $500, and $1000 in profit as well as cooking each dish in the recipe book at least once.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div id="game_and_inventory">
+        <div id="game">
+            <iframe id="vr" class="hidden" src="cowVRfiles/index.html" width="640" height="640" title="VR Cow Game."></iframe>
+
+          <div id="seed_panel" class="hidden">
+            <h2>Seed Bag</h2>
+            <p>
+              Click the image for the ingredient you want to grow. You can buy more seeds ($1/seed) at the marketplace's seed stall.
+            </p>
+            <div id="seeds">
+              <div id="seed_buttons">
+                <div class="seed_item">
+                  <input
+                    class="seed_button"
+                    type="image"
+                    name="grow_potato"
+                    src="images/inventory_potato.png"
+                    width="40"
+                    height="40"
+                    alt="potato, click to grow potatoes"
+                    onclick="setPlayerSeed('potatoes');"
+                  />
+                  <p>Potatoes</p>
+                  <p><span id="potatoes_seed_inventory">5</span> seeds</p>
+                </div>
+                <div class="seed_item">
+                  <input
+                    class="seed_button"
+                    type="image"
+                    name="grow_potato"
+                    src="images/inventory_tomato.png"
+                    width="40"
+                    height="40"
+                    alt="tomato, click to grow tomatoes"
+                    onclick="setPlayerSeed('tomatoes');"
+                  />
+                  <p>Tomatoes</p>
+                  <p><span id="tomatoes_seed_inventory">5</span> seeds</p>
+                </div>
+                <div class="seed_item">
+                  <input
+                    class="seed_button"
+                    type="image"
+                    name="grow_lettuce"
+                    src="images/inventory_lettuce.png"
+                    width="40"
+                    height="40"
+                    alt="lettuce, click to grow lettuce"
+                    onclick="setPlayerSeed('lettuce');"
+                  />
+                  <p>Lettuce</p>
+                  <p><span id="lettuce_seed_inventory">5</span> seeds</p>
+                </div>
+                <div class="seed_item">
+                  <input
+                    class="seed_button"
+                    type="image"
+                    name="grow_carrot"
+                    src="images/inventory_carrot.png"
+                    width="40"
+                    height="40"
+                    alt="carrot, click to grow carrots"
+                    onclick="setPlayerSeed('carrots');"
+                  />
+                  <p>Carrots</p>
+                  <p><span id="carrots_seed_inventory">5</span> seeds</p>
+                </div>
+                <div class="seed_item">
+                  <input
+                    class="seed_button"
+                    type="image"
+                    name="grow_strawberry"
+                    src="images/inventory_strawberry.png"
+                    width="40"
+                    height="40"
+                    alt="strawberry, click to grow strawberries"
+                    onclick="setPlayerSeed('strawberries');"
+                  />
+                  <p>Strawberries</p>
+                  <p><span id="strawberries_seed_inventory">5</span> seeds</p>
+                </div>
+                <div class="seed_item">
+                  <input
+                    class="seed_button"
+                    type="image"
+                    name="grow_watermelon"
+                    src="images/inventory_watermelon.png"
+                    width="40"
+                    height="40"
+                    alt="watermelon, click to grow watermelons"
+                    onclick="setPlayerSeed('watermelons');"
+                  />
+                  <p>Watermelons</p>
+                  <p><span id="watermelons_seed_inventory">5</span> seeds</p>
+                </div>
+                <div class="seed_item">
+                  <input
+                    class="seed_button"
+                    type="image"
+                    name="grow_pumpkin"
+                    src="images/inventory_pumpkin.png"
+                    width="40"
+                    height="40"
+                    alt="pumpkin, click to grow pumpkins"
+                    onclick="setPlayerSeed('pumpkins');"
+                  />
+                  <p>Pumpkins</p>
+                  <p><span id="pumpkins_seed_inventory">5</span> seeds</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="recipe_book" class="hidden">
+            <h2>Recipe Book</h2>
+            <p>Click the image for the recipe you want to cook.</p>
+            <div id="recipes">
+              <div class="recipe_buttons">
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_bakedpotato.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook baked potatoes"
+                    onclick="cook('baked potatoes');"
+                  />
+                  <p>
+                    <span class="recipe_name">Baked Potatoes ($8):</span><br />2 potatoes
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_strawberryjam.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook strawberry jam"
+                    onclick="cook('strawberry jam');"
+                  />
+                  <p>
+                    <span class="recipe_name">Strawberry Jam ($10):</span><br />
+                    3 strawberries
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_watermelon.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook sliced watermelons"
+                    onclick="cook('sliced watermelons');"
+                  />
+                  <p>
+                    <span class="recipe_name">Sliced Watermelons ($5):</span
+                    ><br />
+                    1 watermelon
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_salad.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook salad"
+                    onclick="cook('salad');"
+                  />
+                  <p>
+                    <span class="recipe_name"> Salad ($9):</span><br />
+                    1 tomatoes,<br />
+                    1 lettuce, 1 carrot
+                  </p>
+                </div>
+              </div>
+
+              <div class="recipe_buttons">
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_kebab.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook kebabs"
+                    onclick="cook('kebabs');"
+                  />
+                  <p>
+                    <span class="recipe_name"> Kebabs ($11):</span><br />
+                    1 carrot,<br />
+                    1 watermelon,<br />
+                    1 pumpkin
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_sandwich.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook sandwich"
+                    onclick="cook('sandwich');"
+                  />
+                  <p>
+                    <span class="recipe_name"> Sandwich ($7):</span><br />
+                    2 potatoes,<br />
+                    1 tomatoes,<br />
+                    1 lettuce, 2 milk
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_pumpkinpie.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook pumpkin pie"
+                    onclick="cook('pumpkin pie');"
+                  />
+                  <p>
+                    <span class="recipe_name"> Pumpkin Pie ($18):</span><br />
+                    2 potatoes,<br />
+                    1 pumpkin, <br />
+                    2 milk
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_carrotcake.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook carrot cake"
+                    onclick="cook('carrot cake');"
+                  />
+                  <p>
+                    <span class="recipe_name"> Carrot Cake ($18): </span><br />
+                    2 potatoes,<br />
+                    2 carrots, <br />
+                    2 milk
+                  </p>
+                </div>
+              </div>
+
+              <p id="cant_cook" class="hidden error">
+                You don't have enough ingredients to cook this recipe!
+              </p>
+
+              <p id="cant_bake" class="hidden error">
+                The stove is currently in use! Please come back later.
+              </p>
+            </div>
+          </div>
+
+          <div id="cooked_inventory" class="hidden">
+            <h2>Dishes to Sell</h2>
+            <p>Click the image for the dish you want to sell.</p>
+            <div id="recipes">
+              <div class="recipe_buttons">
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_bakedpotato.png"
+                    width="50"
+                    height="50"
+                    alt="click to sell baked potatoes"
+                    onclick="sell('baked potatoes');"
+                  />
+                  <p>
+                    <span class="recipe_name">Baked Potatoes ($8)</span><br />
+                    Can sell: <span id="baked_potatoes">0</span>
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_strawberryjam.png"
+                    width="50"
+                    height="50"
+                    alt="click to sell strawberry jam"
+                    onclick="sell('strawberry jam');"
+                  />
+                  <p>
+                    <span class="recipe_name">Strawberry Jam ($10)</span><br />
+                    Can sell: <span id="strawberry_jam">0</span>
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_watermelon.png"
+                    width="50"
+                    height="50"
+                    alt="click to sell sliced watermelons"
+                    onclick="sell('sliced watermelons');"
+                  />
+                  <p>
+                    <span class="recipe_name">Sliced Watermelons ($5)</span
+                    ><br />
+                    Can sell: <span id="sliced_watermelons">0</span>
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_salad.png"
+                    width="50"
+                    height="50"
+                    alt="click to sell salad"
+                    onclick="sell('salad');"
+                  />
+                  <p><span class="recipe_name"> Salad ($9)</span><br />
+                  Can sell: <span id="salad">0</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="recipe_buttons">
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_kebab.png"
+                    width="50"
+                    height="50"
+                    alt="click to sell kebabs"
+                    onclick="sell('kebabs');"
+                  />
+                  <p><span class="recipe_name"> Kebabs ($11)</span><br />Can sell: <span id="kebabs">0</span>
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_sandwich.png"
+                    width="50"
+                    height="50"
+                    alt="click to sell sandwich"
+                    onclick="sell('sandwich');"
+                  />
+                  <p><span class="recipe_name"> Sandwich ($7)</span><br />Can sell: <span id="sandwich">0</span>
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_pumpkinpie.png"
+                    width="50"
+                    height="50"
+                    alt="click to cook pumpkin pie"
+                    onclick="sell('pumpkin pie');"
+                  />
+                  <p>
+                    <span class="recipe_name"> Pumpkin Pie ($18)</span><br /> Can sell: <span id="pumpkin_pie">0</span>
+                  </p>
+                </div>
+                <div class="recipe_item">
+                  <input
+                    class="recipe_button"
+                    type="image"
+                    src="images/rb_carrotcake.png"
+                    width="50"
+                    height="50"
+                    alt="click to sell carrot cake"
+                    onclick="sell('carrot cake');"
+                  />
+                  <p>
+                    <span class="recipe_name"> Carrot Cake ($18) </span><br /> Can sell: <span id="carrot_cake">0</span>
+                  </p>
+                </div>
+              </div>
+
+              <p id="cant_sell" class="hidden error">
+                You're already selling something on this booth, <br>or you don't have any of this dish to sell!
+              </p>
+            </div>
+          </div>
+
+          <div id="no_seed" class="hidden">
+            <h2>You can't plant any more <span id="no_seeds">potatoes</span>!</h2>
+            <h3>Go to the seed stall to buy more seeds!</h3>
+            <p>Press ESC to close this window.</p>
+          </div>
+
+          <div id="achievement0" class="achievement hidden">
+            <h2>Congratulations!</h2>
+            <h3>You've earned $50 in profit!</h3>
+            <p>Press ESC to close this window.</p>
+          </div>
+
+          <div id="achievement1" class="achievement hidden">
+            <h2>Congratulations!</h2>
+            <h3>You've earned $100 in profit!</h3>
+            <p>Press ESC to close this window.</p>
+          </div>
+
+          <div id="achievement2" class="achievement hidden">
+            <h2>Congratulations!</h2>
+            <h3>You've earned $500 in profit!</h3>
+            <p>Press ESC to close this window.</p>
+          </div>
+
+          <div id="achievement3" class="achievement hidden">
+            <h2>Congratulations!</h2>
+            <h3>You've earned $1000 in profit!</h3>
+            <p>Press ESC to close this window.</p>
+          </div>
+
+          <div id="achievement4" class="achievement hidden">
+            <h2>Congratulations!</h2>
+            <h3>You've cooked each dish at least once!</h3>
+            <p>Press ESC to close this window.</p>
+          </div>
+        </div>
+
+        <div id="inventory">
+          <h2>Status</h2>
+
+          <h3>Total Profit: <span id="profit">$0</span></h3>
+
+          <h3>Currently planting: <span id="current_seed">potatoes</span></h3>
+
+          <h3>Watering Can is <span id="watering_can">empty</span>!</h3>
+
+          <h2>Inventory</h2>
+          <div class="inventory_item">
+            <img src="images/inventory_potato.png" width="32" height="32" />
+            <p>Potatoes: <span id="potatoes_inventory">0</span></p>
+          </div>
+          <div class="inventory_item">
+            <img src="images/inventory_tomato.png" width="32" height="32" />
+            <p>Tomatoes: <span id="tomato_inventory">0</span></p>
+          </div>
+          <div class="inventory_item">
+            <img src="images/inventory_lettuce.png" width="32" height="32" />
+            <p>Lettuce: <span id="lettuce_inventory">0</span></p>
+          </div>
+          <div class="inventory_item">
+            <img src="images/inventory_carrot.png" width="32" height="32" />
+            <p>Carrots: <span id="carrot_inventory">0</span></p>
+          </div>
+          <div class="inventory_item">
+            <img src="images/inventory_strawberry.png" width="32" height="32" />
+            <p>Strawberries: <span id="strawberry_inventory">0</span></p>
+          </div>
+          <div class="inventory_item">
+            <img src="images/inventory_watermelon.png" width="32" height="32" />
+            <p>Watermelons: <span id="watermelon_inventory">0</span></p>
+          </div>
+          <div class="inventory_item">
+            <img src="images/inventory_pumpkin.png" width="32" height="32" />
+            <p>Pumpkins: <span id="pumpkin_inventory">0</span></p>
+          </div>
+          <div class="inventory_item" id="milk_item">
+            <img src="images/milk.png" width="13" height="37" alt="milk icon" />
+            <p id="milk_text">Milk: <span id="milk_inventory">0</span></p>
+          </div>
+        </div>
+      </div>
+
+      <script src="js/display.js"></script>
+      <script src="js/recipe.js"></script>
+      <script src="js/player.js"></script>
+      <script src="js/NPC.js"></script>
+      <script src="js/plant.js"></script>
+      <script src="js/stove.js"></script>
+      <script src="js/booth.js"></script>
+      <script src="js/cowGame.js"></script>
+      <script src="js/animal.js"></script>
+
+      <script src="js/sketch.js"></script>
+    </main>
+  </body>
+</html>
